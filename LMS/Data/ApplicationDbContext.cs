@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using LMS.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LMS.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -22,6 +24,23 @@ namespace LMS.Data
 
             string databasePath = Path.Combine(databaseDirectory, "LMSDB.db");
             optionsBuilder.UseSqlite($"Data Source={databasePath}");
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new UserConfiguration());
+        }
+    }
+    public class UserConfiguration : IEntityTypeConfiguration<User>
+    {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.Property(u => u.FirstName)
+                .HasMaxLength(50)
+                .IsRequired();
+            builder.Property(u => u.LastName)
+                .HasMaxLength(50)
+                .IsRequired();
         }
     }
 }
