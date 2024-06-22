@@ -60,3 +60,10 @@ body {
 .form-control {
     border-radius: 20px;
 }
+
+.truncate-biography, .truncate-description {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

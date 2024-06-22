@@ -48,9 +48,11 @@ namespace LMS.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name");
+            ViewData["AuthorId"] = new SelectList(_context.Set<Author>(), "Id", "FullName");
             return View();
         }
+
 
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
