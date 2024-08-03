@@ -14,5 +14,6 @@ namespace LMS.Models
         public string? ISBN { get; set; }
         public int? Pages { get; set; }
         public int? Year { get; set; }
+        public int? Quantity { get; set; } = 0;
     }
 }
