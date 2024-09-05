@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LMS.Models.Book>
+﻿@model IEnumerable<LMS.Views.Books.Index>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,25 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Book.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AuthorId)
+                @Html.DisplayNameFor(model => model.Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.Book.Category)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Book.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ISBN)
+                @Html.DisplayNameFor(model => model.Book.ISBN)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Pages)
+                @Html.DisplayNameFor(model => model.Book.Pages)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                @Html.DisplayNameFor(model => model.Book.Year)
             </th>
             <th></th>
         </tr>
@@ -40,30 +40,30 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                    @Html.DisplayFor(modelItem => item.Book.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AuthorId)
+                @Html.DisplayFor(modelItem => item.Author.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.Id)
+                    @Html.DisplayFor(modelItem => item.Book.Category.Name)
             </td>
             <td class="truncate-description">
-                @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.Book.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ISBN)
+                    @Html.DisplayFor(modelItem => item.Book.ISBN)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Pages)
+                    @Html.DisplayFor(modelItem => item.Book.Pages)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Year)
+                    @Html.DisplayFor(modelItem => item.Book.Year)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Book.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Book.Id" class="btn btn-primary">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Book.Id" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }

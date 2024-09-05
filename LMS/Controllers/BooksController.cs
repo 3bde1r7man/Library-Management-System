@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
+using LMS.Views.Books;
+using Index = LMS.Views.Books.Index;
 
 namespace LMS.Controllers
 {
@@ -22,31 +20,55 @@ namespace LMS.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Books.Include(b => b.Category);
-            return View(await applicationDbContext.ToListAsync());
-        }
+            Index details = new Index();
+            List<Index> IndexList = new List<Index>();
 
-        // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context.Books
+            var books = await _context.Books
                 .Include(b => b.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (book == null)
-            {
-                return NotFound();
+                .ToListAsync();
+
+            foreach (var book in books)
+                {
+                details.Book = book;
+                details.Author = await _context.Authors
+                    .FirstOrDefaultAsync(m => m.Id == book.AuthorId);
+                IndexList.Add(details);
             }
 
-            return View(book);
+            return View(IndexList);
         }
 
-        // GET: Books/Create
-        public IActionResult Create()
+		// GET: Books/Details/5
+		public async Task<IActionResult> Details(int? id)
+		{
+			Details details = new Details();
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			details.Book = await _context.Books
+				.Include(b => b.Category)
+				.FirstOrDefaultAsync(m => m.Id == id);
+
+			if (details.Book == null)
+			{
+				return NotFound();
+			}
+
+			details.Author = await _context.Authors
+				.FirstOrDefaultAsync(m => m.Id == details.Book.AuthorId);
+			if (details.Author == null)
+			{
+				return NotFound();
+			}
+
+			return View(details);
+
+		}
+
+		// GET: Books/Create
+		public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name");
             ViewData["AuthorId"] = new SelectList(_context.Set<Author>(), "Id", "FullName");

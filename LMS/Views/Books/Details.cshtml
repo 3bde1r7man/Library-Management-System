@@ -1,5 +1,4 @@
-﻿@model LMS.Models.Book
-
+﻿@model LMS.Views.Books.Details
 @{
     ViewData["Title"] = "Details";
 }
@@ -11,50 +10,50 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Book.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Book.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AuthorId)
+            @Html.DisplayNameFor(model => model.Author)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AuthorId)
+            @Html.DisplayFor(model => model.Author.FullName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => model.Book.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
+            @Html.DisplayFor(model => model.Book.Category.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Book.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Book.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ISBN)
+            @Html.DisplayNameFor(model => model.Book.ISBN)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ISBN)
+            @Html.DisplayFor(model => model.Book.ISBN)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pages)
+            @Html.DisplayNameFor(model => model.Book.Pages)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Pages)
+            @Html.DisplayFor(model => model.Book.Pages)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Year)
+            @Html.DisplayNameFor(model => model.Book.Year)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Year)
+            @Html.DisplayFor(model => model.Book.Year)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Book.Id" class="btn btn-primary">Edit</a>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
