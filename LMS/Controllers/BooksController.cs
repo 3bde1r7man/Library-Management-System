@@ -106,7 +106,12 @@ namespace LMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", book.CategoryId);
+            book.Category = await _context.Categories
+                .FirstOrDefaultAsync(m => m.Id == book.CategoryId);
+            book.Author = await _context.Authors
+                .FirstOrDefaultAsync(m => m.Id == book.AuthorId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name", book.CategoryId);
+            ViewData["AuthorId"] = new SelectList(_context.Set<Author>(), "Id", "FullName", book.AuthorId);
             return View(book);
         }
 
