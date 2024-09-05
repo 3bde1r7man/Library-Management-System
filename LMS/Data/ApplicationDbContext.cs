@@ -1,4 +1,5 @@
 ﻿using LMS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,7 @@ namespace LMS.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Loan> Loans { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -32,7 +34,16 @@ namespace LMS.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new UserConfiguration());
+
+			var admin = new IdentityRole("Admin");
+			admin.NormalizedName = "ADMIN";
+
+			var user = new IdentityRole("User");
+			user.NormalizedName = "USER";
+
+			builder.Entity<IdentityRole>().HasData(admin, user);
+
+			builder.ApplyConfiguration(new UserConfiguration());
         }
     }
     public class UserConfiguration : IEntityTypeConfiguration<User>
@@ -47,4 +58,5 @@ namespace LMS.Data
                 .IsRequired();
         }
     }
+
 }

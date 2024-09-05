@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace LMS.Models
+﻿namespace LMS.Models
 {
     public class Book
     {
