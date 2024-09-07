@@ -5,6 +5,7 @@ using LMS.Data;
 using LMS.Models;
 using LMS.Views.Books;
 using Index = LMS.Views.Books.Index;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.Controllers
 {
@@ -67,8 +68,10 @@ namespace LMS.Controllers
 
 		}
 
-		// GET: Books/Create
-		public IActionResult Create()
+
+        // GET: Books/Create
+        [Authorize (Roles = "Admin")]
+        public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name");
             ViewData["AuthorId"] = new SelectList(_context.Set<Author>(), "Id", "FullName");
@@ -81,6 +84,7 @@ namespace LMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Title,AuthorId,CategoryId,Description,ISBN,Pages,Year")] Book book)
         {
             if (ModelState.IsValid)
@@ -94,6 +98,7 @@ namespace LMS.Controllers
         }
 
         // GET: Books/Edit/5
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -120,6 +125,7 @@ namespace LMS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,AuthorId,CategoryId,Description,ISBN,Pages,Year")] Book book)
         {
             if (id != book.Id)
@@ -152,6 +158,7 @@ namespace LMS.Controllers
         }
 
         // GET: Books/Delete/5
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -173,6 +180,7 @@ namespace LMS.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);

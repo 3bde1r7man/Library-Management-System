@@ -7,26 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Data;
 using LMS.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.Controllers
 {
-    public class CategoriesController : Controller
+    public class LoanController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context)
+        public LoanController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Categories
+        // GET: Loan
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var applicationDbContext = _context.Loans.Include(l => l.Book).Include(l => l.User);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+        // GET: Loan/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +34,45 @@ namespace LMS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var loan = await _context.Loans
+                .Include(l => l.Book)
+                .Include(l => l.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (loan == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(loan);
         }
 
-        // GET: Categories/Create
-        [Authorize(Roles = "Admin")]
+        // GET: Loan/Create
         public IActionResult Create()
         {
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FullName");
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: Loan/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,BookId,UserId,BorrowDate,ReturnDate,Returned")] Loan loan)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
+                _context.Add(loan);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", loan.BookId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", loan.UserId);
+            return View(loan);
         }
 
-        // GET: Categories/Edit/5
-        [Authorize(Roles = "Admin")]
+        // GET: Loan/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +80,24 @@ namespace LMS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var loan = await _context.Loans.FindAsync(id);
+            if (loan == null)
             {
                 return NotFound();
             }
-            return View(category);
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", loan.BookId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", loan.UserId);
+            return View(loan);
         }
 
-        // POST: Categories/Edit/5
+        // POST: Loan/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BookId,UserId,BorrowDate,ReturnDate,Returned")] Loan loan)
         {
-            if (id != category.Id)
+            if (id != loan.Id)
             {
                 return NotFound();
             }
@@ -102,12 +106,12 @@ namespace LMS.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(loan);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!LoanExists(loan.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +122,12 @@ namespace LMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", loan.BookId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", loan.UserId);
+            return View(loan);
         }
 
-        // GET: Categories/Delete/5
-        [Authorize(Roles = "Admin")]
+        // GET: Loan/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,35 +135,36 @@ namespace LMS.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var loan = await _context.Loans
+                .Include(l => l.Book)
+                .Include(l => l.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (loan == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(loan);
         }
 
-        // POST: Categories/Delete/5
+        // POST: Loan/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
+            var loan = await _context.Loans.FindAsync(id);
+            if (loan != null)
             {
-                _context.Categories.Remove(category);
+                _context.Loans.Remove(loan);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool LoanExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Loans.Any(e => e.Id == id);
         }
     }
 }
